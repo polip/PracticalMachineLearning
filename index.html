@@ -123,24 +123,789 @@ $(document).ready(function () {
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>This is an Markdown document created with purpose to present results of predictive analyses on people personal activity. It is created as result of Practical Machine Learning Course Project. Data is provided by <a href="http://groupware.les.inf.puc-rio.br/har" class="uri">http://groupware.les.inf.puc-rio.br/har</a>. Purpose of the modelling is to predict the manner in which people did the exercise which is in “class” variable in the trainig set.</p>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAAXVBMVEUAAAAAADoAAGYAOjoAOpAAZpAAZrY6AAA6OgA6kLY6kNtmAABmtrZmtv+QOgCQZgCQkNuQ29uQ2/+2ZgC2/7a2///bkDrbtmbb/9vb////tmb/25D//7b//9v///+8jXATAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3da2PTSICmUdPDwC4s7A7eziwG8v9/5lq+ypcE601FVWWf86UhYLlaiR8kq1RePAMQWdQeAECvBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAobYDugAopnyiim+xoNp7G7gvxRtVeoNnloeRf5r+4Hf4BwN4WJ0F9Oms/lMbKqBAOV0F9Nfni+Pnf/6dtAUBBcrpKaB/vp8W8/fX9e8//pyyCQEFyukpoKuLXA5J/TZlEwIKlNNTQJeXJ+zrg9BJb4MKKFBORwFdH25+ufji07RzeAEFyukooOujzcvT9dW0y0gCCpQjoAChjgLq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" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="importing-data" class="section level3">
+<h3>Importing data</h3>
+<p>For importing data we will use Hedley’s readr package.</p>
+<pre class="r"><code>library(readr)
+
+training &lt;- read_csv(&quot;~/R/PracticalMachineLearning1/pml-training.csv&quot;, 
+col_types = cols(kurtosis_picth_arm = col_double(), 
+       kurtosis_picth_belt = col_double(), 
+       kurtosis_yaw_arm = col_double(), 
+       kurtosis_yaw_belt = col_double(), 
+       kurtosis_yaw_dumbbell = col_double(), 
+        kurtosis_yaw_forearm = col_double(), 
+        skewness_pitch_arm = col_double(), 
+        skewness_roll_belt.1 = col_double(), 
+        skewness_yaw_arm = col_double(), 
+        skewness_yaw_belt = col_double(),
+       skewness_yaw_dumbbell = col_double(),
+       skewness_yaw_forearm = col_double()))
+        
+        
+testing &lt;- read.csv(&quot;pml-testing.csv&quot;)</code></pre>
+</div>
+<div id="data-inspection" class="section level3">
+<h3>Data inspection</h3>
+<p>Let’s examine training data set that we will use for modelling.</p>
+<p>Training dataset contains 19 622 rows and 160 columns</p>
+<pre class="r"><code>dim(training)</code></pre>
+<pre><code>## [1] 19622   160</code></pre>
+<pre class="r"><code>str(training)</code></pre>
+<pre><code>## Classes 'tbl_df', 'tbl' and 'data.frame':    19622 obs. of  160 variables:
+##  $ X1                      : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ user_name               : chr  &quot;carlitos&quot; &quot;carlitos&quot; &quot;carlitos&quot; &quot;carlitos&quot; ...
+##  $ raw_timestamp_part_1    : int  1323084231 1323084231 1323084231 1323084232 1323084232 1323084232 1323084232 1323084232 1323084232 1323084232 ...
+##  $ raw_timestamp_part_2    : int  788290 808298 820366 120339 196328 304277 368296 440390 484323 484434 ...
+##  $ cvtd_timestamp          : chr  &quot;05/12/2011 11:23&quot; &quot;05/12/2011 11:23&quot; &quot;05/12/2011 11:23&quot; &quot;05/12/2011 11:23&quot; ...
+##  $ new_window              : chr  &quot;no&quot; &quot;no&quot; &quot;no&quot; &quot;no&quot; ...
+##  $ num_window              : int  11 11 11 12 12 12 12 12 12 12 ...
+##  $ roll_belt               : num  1.41 1.41 1.42 1.48 1.48 1.45 1.42 1.42 1.43 1.45 ...
+##  $ pitch_belt              : num  8.07 8.07 8.07 8.05 8.07 8.06 8.09 8.13 8.16 8.17 ...
+##  $ yaw_belt                : num  -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 ...
+##  $ total_accel_belt        : int  3 3 3 3 3 3 3 3 3 3 ...
+##  $ kurtosis_roll_belt      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ kurtosis_picth_belt     : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ kurtosis_yaw_belt       : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_roll_belt      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_roll_belt.1    : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_yaw_belt       : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_picth_belt          : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_yaw_belt            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_pitch_belt          : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_yaw_belt            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ amplitude_roll_belt     : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ amplitude_pitch_belt    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ amplitude_yaw_belt      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ var_total_accel_belt    : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ avg_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ stddev_roll_belt        : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ var_roll_belt           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ avg_pitch_belt          : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ stddev_pitch_belt       : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ var_pitch_belt          : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ avg_yaw_belt            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ stddev_yaw_belt         : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ var_yaw_belt            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ gyros_belt_x            : num  0 0.02 0 0.02 0.02 0.02 0.02 0.02 0.02 0.03 ...
+##  $ gyros_belt_y            : num  0 0 0 0 0.02 0 0 0 0 0 ...
+##  $ gyros_belt_z            : num  -0.02 -0.02 -0.02 -0.03 -0.02 -0.02 -0.02 -0.02 -0.02 0 ...
+##  $ accel_belt_x            : int  -21 -22 -20 -22 -21 -21 -22 -22 -20 -21 ...
+##  $ accel_belt_y            : int  4 4 5 3 2 4 3 4 2 4 ...
+##  $ accel_belt_z            : int  22 22 23 21 24 21 21 21 24 22 ...
+##  $ magnet_belt_x           : int  -3 -7 -2 -6 -6 0 -4 -2 1 -3 ...
+##  $ magnet_belt_y           : int  599 608 600 604 600 603 599 603 602 609 ...
+##  $ magnet_belt_z           : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
+##  $ roll_arm                : num  -128 -128 -128 -128 -128 -128 -128 -128 -128 -128 ...
+##  $ pitch_arm               : num  22.5 22.5 22.5 22.1 22.1 22 21.9 21.8 21.7 21.6 ...
+##  $ yaw_arm                 : num  -161 -161 -161 -161 -161 -161 -161 -161 -161 -161 ...
+##  $ total_accel_arm         : int  34 34 34 34 34 34 34 34 34 34 ...
+##  $ var_accel_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ avg_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ stddev_roll_arm         : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ var_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ avg_pitch_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ stddev_pitch_arm        : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ var_pitch_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ avg_yaw_arm             : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ stddev_yaw_arm          : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ var_yaw_arm             : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ gyros_arm_x             : num  0 0.02 0.02 0.02 0 0.02 0 0.02 0.02 0.02 ...
+##  $ gyros_arm_y             : num  0 -0.02 -0.02 -0.03 -0.03 -0.03 -0.03 -0.02 -0.03 -0.03 ...
+##  $ gyros_arm_z             : num  -0.02 -0.02 -0.02 0.02 0 0 0 0 -0.02 -0.02 ...
+##  $ accel_arm_x             : int  -288 -290 -289 -289 -289 -289 -289 -289 -288 -288 ...
+##  $ accel_arm_y             : int  109 110 110 111 111 111 111 111 109 110 ...
+##  $ accel_arm_z             : int  -123 -125 -126 -123 -123 -122 -125 -124 -122 -124 ...
+##  $ magnet_arm_x            : int  -368 -369 -368 -372 -374 -369 -373 -372 -369 -376 ...
+##  $ magnet_arm_y            : int  337 337 344 344 337 342 336 338 341 334 ...
+##  $ magnet_arm_z            : int  516 513 513 512 506 513 509 510 518 516 ...
+##  $ kurtosis_roll_arm       : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ kurtosis_picth_arm      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ kurtosis_yaw_arm        : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_roll_arm       : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_pitch_arm      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_yaw_arm        : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_picth_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_yaw_arm             : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_roll_arm            : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_pitch_arm           : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_yaw_arm             : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ amplitude_roll_arm      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ amplitude_pitch_arm     : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ amplitude_yaw_arm       : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ roll_dumbbell           : num  13.1 13.1 12.9 13.4 13.4 ...
+##  $ pitch_dumbbell          : num  -70.5 -70.6 -70.3 -70.4 -70.4 ...
+##  $ yaw_dumbbell            : num  -84.9 -84.7 -85.1 -84.9 -84.9 ...
+##  $ kurtosis_roll_dumbbell  : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ kurtosis_picth_dumbbell : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ kurtosis_yaw_dumbbell   : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_roll_dumbbell  : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_pitch_dumbbell : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ skewness_yaw_dumbbell   : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_roll_dumbbell       : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_picth_dumbbell      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ max_yaw_dumbbell        : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_roll_dumbbell       : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_pitch_dumbbell      : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ min_yaw_dumbbell        : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ amplitude_roll_dumbbell : num  NA NA NA NA NA NA NA NA NA NA ...
+##   [list output truncated]
+##  - attr(*, &quot;problems&quot;)=Classes 'tbl_df', 'tbl' and 'data.frame': 3 obs. of  4 variables:
+##   ..$ row     : int  5373 5373 5373
+##   ..$ col     : chr  &quot;magnet_dumbbell_z&quot; &quot;magnet_forearm_y&quot; &quot;magnet_forearm_z&quot;
+##   ..$ expected: chr  &quot;no trailing characters&quot; &quot;no trailing characters&quot; &quot;no trailing characters&quot;
+##   ..$ actual  : chr  &quot;.6&quot; &quot;.123&quot; &quot;.0917&quot;
+##  - attr(*, &quot;spec&quot;)=List of 2
+##   ..$ cols   :List of 160
+##   .. ..$ X1                      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ user_name               : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
+##   .. ..$ raw_timestamp_part_1    : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ raw_timestamp_part_2    : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ cvtd_timestamp          : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
+##   .. ..$ new_window              : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
+##   .. ..$ num_window              : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ roll_belt               : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ pitch_belt              : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ yaw_belt                : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ total_accel_belt        : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_roll_belt      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_picth_belt     : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_yaw_belt       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_roll_belt      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_roll_belt.1    : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_yaw_belt       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_roll_belt           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_picth_belt          : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ max_yaw_belt            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ min_roll_belt           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ min_pitch_belt          : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ min_yaw_belt            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ amplitude_roll_belt     : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ amplitude_pitch_belt    : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ amplitude_yaw_belt      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ var_total_accel_belt    : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ avg_roll_belt           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ stddev_roll_belt        : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ var_roll_belt           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ avg_pitch_belt          : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ stddev_pitch_belt       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ var_pitch_belt          : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ avg_yaw_belt            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ stddev_yaw_belt         : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ var_yaw_belt            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ gyros_belt_x            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ gyros_belt_y            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ gyros_belt_z            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ accel_belt_x            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ accel_belt_y            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ accel_belt_z            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ magnet_belt_x           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ magnet_belt_y           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ magnet_belt_z           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ roll_arm                : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ pitch_arm               : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ yaw_arm                 : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ total_accel_arm         : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ var_accel_arm           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ avg_roll_arm            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ stddev_roll_arm         : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ var_roll_arm            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ avg_pitch_arm           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ stddev_pitch_arm        : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ var_pitch_arm           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ avg_yaw_arm             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ stddev_yaw_arm          : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ var_yaw_arm             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ gyros_arm_x             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ gyros_arm_y             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ gyros_arm_z             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ accel_arm_x             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ accel_arm_y             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ accel_arm_z             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ magnet_arm_x            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ magnet_arm_y            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ magnet_arm_z            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_roll_arm       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_picth_arm      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_yaw_arm        : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_roll_arm       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_pitch_arm      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_yaw_arm        : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_roll_arm            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_picth_arm           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_yaw_arm             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ min_roll_arm            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ min_pitch_arm           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ min_yaw_arm             : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ amplitude_roll_arm      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ amplitude_pitch_arm     : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ amplitude_yaw_arm       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_integer&quot; &quot;collector&quot;
+##   .. ..$ roll_dumbbell           : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ pitch_dumbbell          : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ yaw_dumbbell            : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_roll_dumbbell  : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_picth_dumbbell : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ kurtosis_yaw_dumbbell   : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_roll_dumbbell  : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_pitch_dumbbell : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ skewness_yaw_dumbbell   : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_roll_dumbbell       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_picth_dumbbell      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ max_yaw_dumbbell        : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ min_roll_dumbbell       : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ min_pitch_dumbbell      : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ min_yaw_dumbbell        : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. ..$ amplitude_roll_dumbbell : list()
+##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
+##   .. .. [list output truncated]
+##   ..$ default: list()
+##   .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_guess&quot; &quot;collector&quot;
+##   ..- attr(*, &quot;class&quot;)= chr &quot;col_spec&quot;</code></pre>
+<pre class="r"><code>summary(training)</code></pre>
+<pre><code>##        X1         user_name         raw_timestamp_part_1
+##  Min.   :    1   Length:19622       Min.   :1.322e+09   
+##  1st Qu.: 4906   Class :character   1st Qu.:1.323e+09   
+##  Median : 9812   Mode  :character   Median :1.323e+09   
+##  Mean   : 9812                      Mean   :1.323e+09   
+##  3rd Qu.:14717                      3rd Qu.:1.323e+09   
+##  Max.   :19622                      Max.   :1.323e+09   
+##                                                         
+##  raw_timestamp_part_2 cvtd_timestamp      new_window       
+##  Min.   :   294       Length:19622       Length:19622      
+##  1st Qu.:252912       Class :character   Class :character  
+##  Median :496380       Mode  :character   Mode  :character  
+##  Mean   :500656                                            
+##  3rd Qu.:751891                                            
+##  Max.   :998801                                            
+##                                                            
+##    num_window      roll_belt        pitch_belt          yaw_belt      
+##  Min.   :  1.0   Min.   :-28.90   Min.   :-55.8000   Min.   :-180.00  
+##  1st Qu.:222.0   1st Qu.:  1.10   1st Qu.:  1.7600   1st Qu.: -88.30  
+##  Median :424.0   Median :113.00   Median :  5.2800   Median : -13.00  
+##  Mean   :430.6   Mean   : 64.41   Mean   :  0.3053   Mean   : -11.21  
+##  3rd Qu.:644.0   3rd Qu.:123.00   3rd Qu.: 14.9000   3rd Qu.:  12.90  
+##  Max.   :864.0   Max.   :162.00   Max.   : 60.3000   Max.   : 179.00  
+##                                                                       
+##  total_accel_belt kurtosis_roll_belt kurtosis_picth_belt kurtosis_yaw_belt
+##  Min.   : 0.00    Min.   :-2.121     Min.   :-2.190      Min.   : NA      
+##  1st Qu.: 3.00    1st Qu.:-1.329     1st Qu.:-1.107      1st Qu.: NA      
+##  Median :17.00    Median :-0.899     Median :-0.151      Median : NA      
+##  Mean   :11.31    Mean   :-0.220     Mean   : 4.334      Mean   :NaN      
+##  3rd Qu.:18.00    3rd Qu.:-0.219     3rd Qu.: 3.178      3rd Qu.: NA      
+##  Max.   :29.00    Max.   :33.000     Max.   :58.000      Max.   : NA      
+##                   NA's   :19226      NA's   :19248       NA's   :19622    
+##  skewness_roll_belt skewness_roll_belt.1 skewness_yaw_belt
+##  Min.   :-5.745     Min.   :-7.616       Min.   : NA      
+##  1st Qu.:-0.444     1st Qu.:-1.114       1st Qu.: NA      
+##  Median : 0.000     Median :-0.068       Median : NA      
+##  Mean   :-0.026     Mean   :-0.296       Mean   :NaN      
+##  3rd Qu.: 0.417     3rd Qu.: 0.661       3rd Qu.: NA      
+##  Max.   : 3.595     Max.   : 7.348       Max.   : NA      
+##  NA's   :19225      NA's   :19248        NA's   :19622    
+##  max_roll_belt     max_picth_belt   max_yaw_belt   min_roll_belt    
+##  Min.   :-94.300   Min.   : 3.00   Min.   :-2.10   Min.   :-180.00  
+##  1st Qu.:-88.000   1st Qu.: 5.00   1st Qu.:-1.30   1st Qu.: -88.40  
+##  Median : -5.100   Median :18.00   Median :-0.90   Median :  -7.85  
+##  Mean   : -6.667   Mean   :12.92   Mean   :-0.22   Mean   : -10.44  
+##  3rd Qu.: 18.500   3rd Qu.:19.00   3rd Qu.:-0.20   3rd Qu.:   9.05  
+##  Max.   :180.000   Max.   :30.00   Max.   :33.00   Max.   : 173.00  
+##  NA's   :19216     NA's   :19216   NA's   :19226   NA's   :19216    
+##  min_pitch_belt   min_yaw_belt   amplitude_roll_belt amplitude_pitch_belt
+##  Min.   : 0.00   Min.   :-2.10   Min.   :  0.000     Min.   : 0.000      
+##  1st Qu.: 3.00   1st Qu.:-1.30   1st Qu.:  0.300     1st Qu.: 1.000      
+##  Median :16.00   Median :-0.90   Median :  1.000     Median : 1.000      
+##  Mean   :10.76   Mean   :-0.22   Mean   :  3.769     Mean   : 2.167      
+##  3rd Qu.:17.00   3rd Qu.:-0.20   3rd Qu.:  2.083     3rd Qu.: 2.000      
+##  Max.   :23.00   Max.   :33.00   Max.   :360.000     Max.   :12.000      
+##  NA's   :19216   NA's   :19226   NA's   :19216       NA's   :19216       
+##  amplitude_yaw_belt var_total_accel_belt avg_roll_belt    stddev_roll_belt
+##  Min.   :0          Min.   : 0.000       Min.   :-27.40   Min.   : 0.000  
+##  1st Qu.:0          1st Qu.: 0.100       1st Qu.:  1.10   1st Qu.: 0.200  
+##  Median :0          Median : 0.200       Median :116.35   Median : 0.400  
+##  Mean   :0          Mean   : 0.926       Mean   : 68.06   Mean   : 1.337  
+##  3rd Qu.:0          3rd Qu.: 0.300       3rd Qu.:123.38   3rd Qu.: 0.700  
+##  Max.   :0          Max.   :16.500       Max.   :157.40   Max.   :14.200  
+##  NA's   :19226      NA's   :19216        NA's   :19216    NA's   :19216   
+##  var_roll_belt     avg_pitch_belt    stddev_pitch_belt var_pitch_belt  
+##  Min.   :  0.000   Min.   :-51.400   Min.   :0.000     Min.   : 0.000  
+##  1st Qu.:  0.000   1st Qu.:  2.025   1st Qu.:0.200     1st Qu.: 0.000  
+##  Median :  0.100   Median :  5.200   Median :0.400     Median : 0.100  
+##  Mean   :  7.699   Mean   :  0.520   Mean   :0.603     Mean   : 0.766  
+##  3rd Qu.:  0.500   3rd Qu.: 15.775   3rd Qu.:0.700     3rd Qu.: 0.500  
+##  Max.   :200.700   Max.   : 59.700   Max.   :4.000     Max.   :16.200  
+##  NA's   :19216     NA's   :19216     NA's   :19216     NA's   :19216   
+##   avg_yaw_belt      stddev_yaw_belt    var_yaw_belt      
+##  Min.   :-138.300   Min.   :  0.000   Min.   :    0.000  
+##  1st Qu.: -88.175   1st Qu.:  0.100   1st Qu.:    0.010  
+##  Median :  -6.550   Median :  0.300   Median :    0.090  
+##  Mean   :  -8.831   Mean   :  1.341   Mean   :  107.487  
+##  3rd Qu.:  14.125   3rd Qu.:  0.700   3rd Qu.:    0.475  
+##  Max.   : 173.500   Max.   :176.600   Max.   :31183.240  
+##  NA's   :19216      NA's   :19216     NA's   :19216      
+##   gyros_belt_x        gyros_belt_y       gyros_belt_z    
+##  Min.   :-1.040000   Min.   :-0.64000   Min.   :-1.4600  
+##  1st Qu.:-0.030000   1st Qu.: 0.00000   1st Qu.:-0.2000  
+##  Median : 0.030000   Median : 0.02000   Median :-0.1000  
+##  Mean   :-0.005592   Mean   : 0.03959   Mean   :-0.1305  
+##  3rd Qu.: 0.110000   3rd Qu.: 0.11000   3rd Qu.:-0.0200  
+##  Max.   : 2.220000   Max.   : 0.64000   Max.   : 1.6200  
+##                                                          
+##   accel_belt_x       accel_belt_y     accel_belt_z     magnet_belt_x  
+##  Min.   :-120.000   Min.   :-69.00   Min.   :-275.00   Min.   :-52.0  
+##  1st Qu.: -21.000   1st Qu.:  3.00   1st Qu.:-162.00   1st Qu.:  9.0  
+##  Median : -15.000   Median : 35.00   Median :-152.00   Median : 35.0  
+##  Mean   :  -5.595   Mean   : 30.15   Mean   : -72.59   Mean   : 55.6  
+##  3rd Qu.:  -5.000   3rd Qu.: 61.00   3rd Qu.:  27.00   3rd Qu.: 59.0  
+##  Max.   :  85.000   Max.   :164.00   Max.   : 105.00   Max.   :485.0  
+##                                                                       
+##  magnet_belt_y   magnet_belt_z       roll_arm         pitch_arm      
+##  Min.   :354.0   Min.   :-623.0   Min.   :-180.00   Min.   :-88.800  
+##  1st Qu.:581.0   1st Qu.:-375.0   1st Qu.: -31.77   1st Qu.:-25.900  
+##  Median :601.0   Median :-320.0   Median :   0.00   Median :  0.000  
+##  Mean   :593.7   Mean   :-345.5   Mean   :  17.83   Mean   : -4.612  
+##  3rd Qu.:610.0   3rd Qu.:-306.0   3rd Qu.:  77.30   3rd Qu.: 11.200  
+##  Max.   :673.0   Max.   : 293.0   Max.   : 180.00   Max.   : 88.500  
+##                                                                      
+##     yaw_arm          total_accel_arm var_accel_arm     avg_roll_arm    
+##  Min.   :-180.0000   Min.   : 1.00   Min.   :  0.00   Min.   :-166.67  
+##  1st Qu.: -43.1000   1st Qu.:17.00   1st Qu.:  9.03   1st Qu.: -38.37  
+##  Median :   0.0000   Median :27.00   Median : 40.61   Median :   0.00  
+##  Mean   :  -0.6188   Mean   :25.51   Mean   : 53.23   Mean   :  12.68  
+##  3rd Qu.:  45.8750   3rd Qu.:33.00   3rd Qu.: 75.62   3rd Qu.:  76.33  
+##  Max.   : 180.0000   Max.   :66.00   Max.   :331.70   Max.   : 163.33  
+##                                      NA's   :19216    NA's   :19216    
+##  stddev_roll_arm    var_roll_arm       avg_pitch_arm     stddev_pitch_arm
+##  Min.   :  0.000   Min.   :    0.000   Min.   :-81.773   Min.   : 0.000  
+##  1st Qu.:  1.376   1st Qu.:    1.898   1st Qu.:-22.770   1st Qu.: 1.642  
+##  Median :  5.702   Median :   32.517   Median :  0.000   Median : 8.133  
+##  Mean   : 11.201   Mean   :  417.264   Mean   : -4.901   Mean   :10.383  
+##  3rd Qu.: 14.921   3rd Qu.:  222.647   3rd Qu.:  8.277   3rd Qu.:16.327  
+##  Max.   :161.964   Max.   :26232.208   Max.   : 75.659   Max.   :43.412  
+##  NA's   :19216     NA's   :19216       NA's   :19216     NA's   :19216   
+##  var_pitch_arm       avg_yaw_arm       stddev_yaw_arm   
+##  Min.   :   0.000   Min.   :-173.440   Min.   :  0.000  
+##  1st Qu.:   2.697   1st Qu.: -29.198   1st Qu.:  2.577  
+##  Median :  66.146   Median :   0.000   Median : 16.682  
+##  Mean   : 195.864   Mean   :   2.359   Mean   : 22.270  
+##  3rd Qu.: 266.576   3rd Qu.:  38.185   3rd Qu.: 35.984  
+##  Max.   :1884.565   Max.   : 152.000   Max.   :177.044  
+##  NA's   :19216      NA's   :19216      NA's   :19216    
+##   var_yaw_arm         gyros_arm_x        gyros_arm_y     
+##  Min.   :    0.000   Min.   :-6.37000   Min.   :-3.4400  
+##  1st Qu.:    6.642   1st Qu.:-1.33000   1st Qu.:-0.8000  
+##  Median :  278.309   Median : 0.08000   Median :-0.2400  
+##  Mean   : 1055.933   Mean   : 0.04277   Mean   :-0.2571  
+##  3rd Qu.: 1294.850   3rd Qu.: 1.57000   3rd Qu.: 0.1400  
+##  Max.   :31344.568   Max.   : 4.87000   Max.   : 2.8400  
+##  NA's   :19216                                           
+##   gyros_arm_z       accel_arm_x       accel_arm_y      accel_arm_z     
+##  Min.   :-2.3300   Min.   :-404.00   Min.   :-318.0   Min.   :-636.00  
+##  1st Qu.:-0.0700   1st Qu.:-242.00   1st Qu.: -54.0   1st Qu.:-143.00  
+##  Median : 0.2300   Median : -44.00   Median :  14.0   Median : -47.00  
+##  Mean   : 0.2695   Mean   : -60.24   Mean   :  32.6   Mean   : -71.25  
+##  3rd Qu.: 0.7200   3rd Qu.:  84.00   3rd Qu.: 139.0   3rd Qu.:  23.00  
+##  Max.   : 3.0200   Max.   : 437.00   Max.   : 308.0   Max.   : 292.00  
+##                                                                        
+##   magnet_arm_x     magnet_arm_y     magnet_arm_z    kurtosis_roll_arm
+##  Min.   :-584.0   Min.   :-392.0   Min.   :-597.0   Min.   :-1.809   
+##  1st Qu.:-300.0   1st Qu.:  -9.0   1st Qu.: 131.2   1st Qu.:-1.345   
+##  Median : 289.0   Median : 202.0   Median : 444.0   Median :-0.894   
+##  Mean   : 191.7   Mean   : 156.6   Mean   : 306.5   Mean   :-0.366   
+##  3rd Qu.: 637.0   3rd Qu.: 323.0   3rd Qu.: 545.0   3rd Qu.:-0.038   
+##  Max.   : 782.0   Max.   : 583.0   Max.   : 694.0   Max.   :21.456   
+##                                                     NA's   :19294    
+##  kurtosis_picth_arm kurtosis_yaw_arm skewness_roll_arm skewness_pitch_arm
+##  Min.   :-2.084     Min.   :-2.103   Min.   :-2.541    Min.   :-4.565    
+##  1st Qu.:-1.280     1st Qu.:-1.220   1st Qu.:-0.561    1st Qu.:-0.618    
+##  Median :-1.010     Median :-0.733   Median : 0.040    Median :-0.035    
+##  Mean   :-0.542     Mean   : 0.406   Mean   : 0.068    Mean   :-0.065    
+##  3rd Qu.:-0.379     3rd Qu.: 0.115   3rd Qu.: 0.671    3rd Qu.: 0.454    
+##  Max.   :19.751     Max.   :56.000   Max.   : 4.394    Max.   : 3.043    
+##  NA's   :19296      NA's   :19227    NA's   :19293     NA's   :19296     
+##  skewness_yaw_arm  max_roll_arm     max_picth_arm       max_yaw_arm   
+##  Min.   :-6.708   Min.   :-73.100   Min.   :-173.000   Min.   : 4.00  
+##  1st Qu.:-0.743   1st Qu.: -0.175   1st Qu.:  -1.975   1st Qu.:29.00  
+##  Median :-0.133   Median :  4.950   Median :  23.250   Median :34.00  
+##  Mean   :-0.229   Mean   : 11.236   Mean   :  35.751   Mean   :35.46  
+##  3rd Qu.: 0.344   3rd Qu.: 26.775   3rd Qu.:  95.975   3rd Qu.:41.00  
+##  Max.   : 7.483   Max.   : 85.500   Max.   : 180.000   Max.   :65.00  
+##  NA's   :19227    NA's   :19216     NA's   :19216      NA's   :19216  
+##   min_roll_arm    min_pitch_arm      min_yaw_arm    amplitude_roll_arm
+##  Min.   :-89.10   Min.   :-180.00   Min.   : 1.00   Min.   :  0.000   
+##  1st Qu.:-41.98   1st Qu.: -72.62   1st Qu.: 8.00   1st Qu.:  5.425   
+##  Median :-22.45   Median : -33.85   Median :13.00   Median : 28.450   
+##  Mean   :-21.22   Mean   : -33.92   Mean   :14.66   Mean   : 32.452   
+##  3rd Qu.:  0.00   3rd Qu.:   0.00   3rd Qu.:19.00   3rd Qu.: 50.960   
+##  Max.   : 66.40   Max.   : 152.00   Max.   :38.00   Max.   :119.500   
+##  NA's   :19216    NA's   :19216     NA's   :19216   NA's   :19216     
+##  amplitude_pitch_arm amplitude_yaw_arm roll_dumbbell     pitch_dumbbell   
+##  Min.   :  0.000     Min.   : 0.00     Min.   :-153.71   Min.   :-149.59  
+##  1st Qu.:  9.925     1st Qu.:13.00     1st Qu.: -18.49   1st Qu.: -40.89  
+##  Median : 54.900     Median :22.00     Median :  48.17   Median : -20.96  
+##  Mean   : 69.677     Mean   :20.79     Mean   :  23.84   Mean   : -10.78  
+##  3rd Qu.:115.175     3rd Qu.:28.75     3rd Qu.:  67.61   3rd Qu.:  17.50  
+##  Max.   :360.000     Max.   :52.00     Max.   : 153.55   Max.   : 149.40  
+##  NA's   :19216       NA's   :19216                                        
+##   yaw_dumbbell      kurtosis_roll_dumbbell kurtosis_picth_dumbbell
+##  Min.   :-150.871   Min.   :-2.174         Min.   :-2.200         
+##  1st Qu.: -77.644   1st Qu.:-0.682         1st Qu.:-0.721         
+##  Median :  -3.324   Median :-0.033         Median :-0.133         
+##  Mean   :   1.674   Mean   : 0.452         Mean   : 0.286         
+##  3rd Qu.:  79.643   3rd Qu.: 0.940         3rd Qu.: 0.584         
+##  Max.   : 154.952   Max.   :54.998         Max.   :55.628         
+##                     NA's   :19221          NA's   :19218          
+##  kurtosis_yaw_dumbbell skewness_roll_dumbbell skewness_pitch_dumbbell
+##  Min.   : NA           Min.   :-7.384         Min.   :-7.447         
+##  1st Qu.: NA           1st Qu.:-0.581         1st Qu.:-0.526         
+##  Median : NA           Median :-0.076         Median :-0.091         
+##  Mean   :NaN           Mean   :-0.115         Mean   :-0.035         
+##  3rd Qu.: NA           3rd Qu.: 0.400         3rd Qu.: 0.505         
+##  Max.   : NA           Max.   : 1.958         Max.   : 3.769         
+##  NA's   :19622         NA's   :19220          NA's   :19217          
+##  skewness_yaw_dumbbell max_roll_dumbbell max_picth_dumbbell
+##  Min.   : NA           Min.   :-70.10    Min.   :-112.90   
+##  1st Qu.: NA           1st Qu.:-27.15    1st Qu.: -66.70   
+##  Median : NA           Median : 14.85    Median :  40.05   
+##  Mean   :NaN           Mean   : 13.76    Mean   :  32.75   
+##  3rd Qu.: NA           3rd Qu.: 50.58    3rd Qu.: 133.22   
+##  Max.   : NA           Max.   :137.00    Max.   : 155.00   
+##  NA's   :19622         NA's   :19216     NA's   :19216     
+##  max_yaw_dumbbell min_roll_dumbbell min_pitch_dumbbell min_yaw_dumbbell
+##  Min.   :-2.20    Min.   :-149.60   Min.   :-147.00    Min.   :-2.20   
+##  1st Qu.:-0.70    1st Qu.: -59.67   1st Qu.: -91.80    1st Qu.:-0.70   
+##  Median : 0.00    Median : -43.55   Median : -66.15    Median : 0.00   
+##  Mean   : 0.45    Mean   : -41.24   Mean   : -33.18    Mean   : 0.45   
+##  3rd Qu.: 0.90    3rd Qu.: -25.20   3rd Qu.:  21.20    3rd Qu.: 0.90   
+##  Max.   :55.00    Max.   :  73.20   Max.   : 120.90    Max.   :55.00   
+##  NA's   :19221    NA's   :19216     NA's   :19216      NA's   :19221   
+##  amplitude_roll_dumbbell amplitude_pitch_dumbbell amplitude_yaw_dumbbell
+##  Min.   :  0.00          Min.   :  0.00           Min.   :0             
+##  1st Qu.: 14.97          1st Qu.: 17.06           1st Qu.:0             
+##  Median : 35.05          Median : 41.73           Median :0             
+##  Mean   : 55.00          Mean   : 65.93           Mean   :0             
+##  3rd Qu.: 81.04          3rd Qu.: 99.55           3rd Qu.:0             
+##  Max.   :256.48          Max.   :273.59           Max.   :0             
+##  NA's   :19216           NA's   :19216            NA's   :19221         
+##  total_accel_dumbbell var_accel_dumbbell avg_roll_dumbbell
+##  Min.   : 0.00        Min.   :  0.000    Min.   :-128.96  
+##  1st Qu.: 4.00        1st Qu.:  0.378    1st Qu.: -12.33  
+##  Median :10.00        Median :  1.000    Median :  48.23  
+##  Mean   :13.72        Mean   :  4.388    Mean   :  23.86  
+##  3rd Qu.:19.00        3rd Qu.:  3.434    3rd Qu.:  64.37  
+##  Max.   :58.00        Max.   :230.428    Max.   : 125.99  
+##                       NA's   :19216      NA's   :19216    
+##  stddev_roll_dumbbell var_roll_dumbbell  avg_pitch_dumbbell
+##  Min.   :  0.000      Min.   :    0.00   Min.   :-70.73    
+##  1st Qu.:  4.639      1st Qu.:   21.52   1st Qu.:-42.00    
+##  Median : 12.204      Median :  148.95   Median :-19.91    
+##  Mean   : 20.761      Mean   : 1020.27   Mean   :-12.33    
+##  3rd Qu.: 26.356      3rd Qu.:  694.65   3rd Qu.: 13.21    
+##  Max.   :123.778      Max.   :15321.01   Max.   : 94.28    
+##  NA's   :19216        NA's   :19216      NA's   :19216     
+##  stddev_pitch_dumbbell var_pitch_dumbbell avg_yaw_dumbbell  
+##  Min.   : 0.000        Min.   :   0.00    Min.   :-117.950  
+##  1st Qu.: 3.482        1st Qu.:  12.12    1st Qu.: -76.696  
+##  Median : 8.089        Median :  65.44    Median :  -4.505  
+##  Mean   :13.147        Mean   : 350.31    Mean   :   0.202  
+##  3rd Qu.:19.238        3rd Qu.: 370.11    3rd Qu.:  71.234  
+##  Max.   :82.680        Max.   :6836.02    Max.   : 134.905  
+##  NA's   :19216         NA's   :19216      NA's   :19216     
+##  stddev_yaw_dumbbell var_yaw_dumbbell   gyros_dumbbell_x   
+##  Min.   :  0.000     Min.   :    0.00   Min.   :-204.0000  
+##  1st Qu.:  3.885     1st Qu.:   15.09   1st Qu.:  -0.0300  
+##  Median : 10.264     Median :  105.35   Median :   0.1300  
+##  Mean   : 16.647     Mean   :  589.84   Mean   :   0.1611  
+##  3rd Qu.: 24.674     3rd Qu.:  608.79   3rd Qu.:   0.3500  
+##  Max.   :107.088     Max.   :11467.91   Max.   :   2.2200  
+##  NA's   :19216       NA's   :19216                         
+##  gyros_dumbbell_y   gyros_dumbbell_z  accel_dumbbell_x  accel_dumbbell_y 
+##  Min.   :-2.10000   Min.   : -2.380   Min.   :-419.00   Min.   :-189.00  
+##  1st Qu.:-0.14000   1st Qu.: -0.310   1st Qu.: -50.00   1st Qu.:  -8.00  
+##  Median : 0.03000   Median : -0.130   Median :  -8.00   Median :  41.50  
+##  Mean   : 0.04606   Mean   : -0.129   Mean   : -28.62   Mean   :  52.63  
+##  3rd Qu.: 0.21000   3rd Qu.:  0.030   3rd Qu.:  11.00   3rd Qu.: 111.00  
+##  Max.   :52.00000   Max.   :317.000   Max.   : 235.00   Max.   : 315.00  
+##                                                                          
+##  accel_dumbbell_z  magnet_dumbbell_x magnet_dumbbell_y magnet_dumbbell_z
+##  Min.   :-334.00   Min.   :-643.0    Min.   :-3600     Min.   :-262.00  
+##  1st Qu.:-142.00   1st Qu.:-535.0    1st Qu.:  231     1st Qu.: -45.00  
+##  Median :  -1.00   Median :-479.0    Median :  311     Median :  13.00  
+##  Mean   : -38.32   Mean   :-328.5    Mean   :  221     Mean   :  46.05  
+##  3rd Qu.:  38.00   3rd Qu.:-304.0    3rd Qu.:  390     3rd Qu.:  95.00  
+##  Max.   : 318.00   Max.   : 592.0    Max.   :  633     Max.   : 452.00  
+##                                                        NA's   :1        
+##   roll_forearm       pitch_forearm     yaw_forearm     
+##  Min.   :-180.0000   Min.   :-72.50   Min.   :-180.00  
+##  1st Qu.:  -0.7375   1st Qu.:  0.00   1st Qu.: -68.60  
+##  Median :  21.7000   Median :  9.24   Median :   0.00  
+##  Mean   :  33.8265   Mean   : 10.71   Mean   :  19.21  
+##  3rd Qu.: 140.0000   3rd Qu.: 28.40   3rd Qu.: 110.00  
+##  Max.   : 180.0000   Max.   : 89.80   Max.   : 180.00  
+##                                                        
+##  kurtosis_roll_forearm kurtosis_picth_forearm kurtosis_yaw_forearm
+##  Min.   :-1.879        Min.   :-2.098         Min.   : NA         
+##  1st Qu.:-1.398        1st Qu.:-1.376         1st Qu.: NA         
+##  Median :-1.119        Median :-0.890         Median : NA         
+##  Mean   :-0.689        Mean   : 0.419         Mean   :NaN         
+##  3rd Qu.:-0.618        3rd Qu.: 0.054         3rd Qu.: NA         
+##  Max.   :40.060        Max.   :33.626         Max.   : NA         
+##  NA's   :19300         NA's   :19301          NA's   :19622       
+##  skewness_roll_forearm skewness_pitch_forearm skewness_yaw_forearm
+##  Min.   :-2.297        Min.   :-5.241         Min.   : NA         
+##  1st Qu.:-0.402        1st Qu.:-0.881         1st Qu.: NA         
+##  Median : 0.003        Median :-0.156         Median : NA         
+##  Mean   :-0.009        Mean   :-0.223         Mean   :NaN         
+##  3rd Qu.: 0.370        3rd Qu.: 0.514         3rd Qu.: NA         
+##  Max.   : 5.856        Max.   : 4.464         Max.   : NA         
+##  NA's   :19299         NA's   :19301          NA's   :19622       
+##  max_roll_forearm max_picth_forearm max_yaw_forearm  min_roll_forearm 
+##  Min.   :-66.60   Min.   :-151.00   Min.   :-1.900   Min.   :-72.500  
+##  1st Qu.:  0.00   1st Qu.:   0.00   1st Qu.:-1.400   1st Qu.: -6.075  
+##  Median : 26.80   Median : 113.00   Median :-1.100   Median :  0.000  
+##  Mean   : 24.49   Mean   :  81.49   Mean   :-0.689   Mean   : -0.167  
+##  3rd Qu.: 45.95   3rd Qu.: 174.75   3rd Qu.:-0.600   3rd Qu.: 12.075  
+##  Max.   : 89.80   Max.   : 180.00   Max.   :40.100   Max.   : 62.100  
+##  NA's   :19216    NA's   :19216     NA's   :19300    NA's   :19216    
+##  min_pitch_forearm min_yaw_forearm  amplitude_roll_forearm
+##  Min.   :-180.00   Min.   :-1.900   Min.   :  0.000       
+##  1st Qu.:-175.00   1st Qu.:-1.400   1st Qu.:  1.125       
+##  Median : -61.00   Median :-1.100   Median : 17.770       
+##  Mean   : -57.57   Mean   :-0.689   Mean   : 24.653       
+##  3rd Qu.:   0.00   3rd Qu.:-0.600   3rd Qu.: 39.875       
+##  Max.   : 167.00   Max.   :40.100   Max.   :126.000       
+##  NA's   :19216     NA's   :19300    NA's   :19216         
+##  amplitude_pitch_forearm amplitude_yaw_forearm total_accel_forearm
+##  Min.   :  0.0           Min.   :0             Min.   :  0.00     
+##  1st Qu.:  2.0           1st Qu.:0             1st Qu.: 29.00     
+##  Median : 83.7           Median :0             Median : 36.00     
+##  Mean   :139.1           Mean   :0             Mean   : 34.72     
+##  3rd Qu.:350.0           3rd Qu.:0             3rd Qu.: 41.00     
+##  Max.   :360.0           Max.   :0             Max.   :108.00     
+##  NA's   :19216           NA's   :19300                            
+##  var_accel_forearm avg_roll_forearm   stddev_roll_forearm
+##  Min.   :  0.000   Min.   :-177.234   Min.   :  0.000    
+##  1st Qu.:  6.759   1st Qu.:  -0.909   1st Qu.:  0.428    
+##  Median : 21.165   Median :  11.172   Median :  8.030    
+##  Mean   : 33.502   Mean   :  33.165   Mean   : 41.986    
+##  3rd Qu.: 51.240   3rd Qu.: 107.132   3rd Qu.: 85.373    
+##  Max.   :172.606   Max.   : 177.256   Max.   :179.171    
+##  NA's   :19216     NA's   :19216      NA's   :19216      
+##  var_roll_forearm   avg_pitch_forearm stddev_pitch_forearm
+##  Min.   :    0.00   Min.   :-68.17    Min.   : 0.000      
+##  1st Qu.:    0.18   1st Qu.:  0.00    1st Qu.: 0.336      
+##  Median :   64.48   Median : 12.02    Median : 5.516      
+##  Mean   : 5274.10   Mean   : 11.79    Mean   : 7.977      
+##  3rd Qu.: 7289.08   3rd Qu.: 28.48    3rd Qu.:12.866      
+##  Max.   :32102.24   Max.   : 72.09    Max.   :47.745      
+##  NA's   :19216      NA's   :19216     NA's   :19216       
+##  var_pitch_forearm  avg_yaw_forearm   stddev_yaw_forearm
+##  Min.   :   0.000   Min.   :-155.06   Min.   :  0.000   
+##  1st Qu.:   0.113   1st Qu.: -26.26   1st Qu.:  0.524   
+##  Median :  30.425   Median :   0.00   Median : 24.743   
+##  Mean   : 139.593   Mean   :  18.00   Mean   : 44.854   
+##  3rd Qu.: 165.532   3rd Qu.:  85.79   3rd Qu.: 85.817   
+##  Max.   :2279.617   Max.   : 169.24   Max.   :197.508   
+##  NA's   :19216      NA's   :19216     NA's   :19216     
+##  var_yaw_forearm    gyros_forearm_x   gyros_forearm_y    
+##  Min.   :    0.00   Min.   :-22.000   Min.   : -7.02000  
+##  1st Qu.:    0.27   1st Qu.: -0.220   1st Qu.: -1.46000  
+##  Median :  612.21   Median :  0.050   Median :  0.03000  
+##  Mean   : 4639.85   Mean   :  0.158   Mean   :  0.07517  
+##  3rd Qu.: 7368.41   3rd Qu.:  0.560   3rd Qu.:  1.62000  
+##  Max.   :39009.33   Max.   :  3.970   Max.   :311.00000  
+##  NA's   :19216                                           
+##  gyros_forearm_z    accel_forearm_x   accel_forearm_y  accel_forearm_z  
+##  Min.   : -8.0900   Min.   :-498.00   Min.   :-632.0   Min.   :-446.00  
+##  1st Qu.: -0.1800   1st Qu.:-178.00   1st Qu.:  57.0   1st Qu.:-182.00  
+##  Median :  0.0800   Median : -57.00   Median : 201.0   Median : -39.00  
+##  Mean   :  0.1512   Mean   : -61.65   Mean   : 163.7   Mean   : -55.29  
+##  3rd Qu.:  0.4900   3rd Qu.:  76.00   3rd Qu.: 312.0   3rd Qu.:  26.00  
+##  Max.   :231.0000   Max.   : 477.00   Max.   : 923.0   Max.   : 291.00  
+##                                                                         
+##  magnet_forearm_x  magnet_forearm_y magnet_forearm_z    classe         
+##  Min.   :-1280.0   Min.   :-896.0   Min.   :-973.0   Length:19622      
+##  1st Qu.: -616.0   1st Qu.:   2.0   1st Qu.: 191.0   Class :character  
+##  Median : -378.0   Median : 591.0   Median : 511.0   Mode  :character  
+##  Mean   : -312.6   Mean   : 380.1   Mean   : 393.6                     
+##  3rd Qu.:  -73.0   3rd Qu.: 737.0   3rd Qu.: 653.0                     
+##  Max.   :  672.0   Max.   :1480.0   Max.   :1090.0                     
+##                    NA's   :1        NA's   :1</code></pre>
+<pre class="r"><code>head(training,n = 20)</code></pre>
+<pre><code>## # A tibble: 20 × 160
+##       X1 user_name raw_timestamp_part_1 raw_timestamp_part_2
+##    &lt;int&gt;     &lt;chr&gt;                &lt;int&gt;                &lt;int&gt;
+## 1      1  carlitos           1323084231               788290
+## 2      2  carlitos           1323084231               808298
+## 3      3  carlitos           1323084231               820366
+## 4      4  carlitos           1323084232               120339
+## 5      5  carlitos           1323084232               196328
+## 6      6  carlitos           1323084232               304277
+## 7      7  carlitos           1323084232               368296
+## 8      8  carlitos           1323084232               440390
+## 9      9  carlitos           1323084232               484323
+## 10    10  carlitos           1323084232               484434
+## 11    11  carlitos           1323084232               500302
+## 12    12  carlitos           1323084232               528316
+## 13    13  carlitos           1323084232               560359
+## 14    14  carlitos           1323084232               576390
+## 15    15  carlitos           1323084232               604281
+## 16    16  carlitos           1323084232               644302
+## 17    17  carlitos           1323084232               692324
+## 18    18  carlitos           1323084232               732306
+## 19    19  carlitos           1323084232               740353
+## 20    20  carlitos           1323084232               788335
+## # ... with 156 more variables: cvtd_timestamp &lt;chr&gt;, new_window &lt;chr&gt;,
+## #   num_window &lt;int&gt;, roll_belt &lt;dbl&gt;, pitch_belt &lt;dbl&gt;, yaw_belt &lt;dbl&gt;,
+## #   total_accel_belt &lt;int&gt;, kurtosis_roll_belt &lt;dbl&gt;,
+## #   kurtosis_picth_belt &lt;dbl&gt;, kurtosis_yaw_belt &lt;dbl&gt;,
+## #   skewness_roll_belt &lt;dbl&gt;, skewness_roll_belt.1 &lt;dbl&gt;,
+## #   skewness_yaw_belt &lt;dbl&gt;, max_roll_belt &lt;dbl&gt;, max_picth_belt &lt;int&gt;,
+## #   max_yaw_belt &lt;dbl&gt;, min_roll_belt &lt;dbl&gt;, min_pitch_belt &lt;int&gt;,
+## #   min_yaw_belt &lt;dbl&gt;, amplitude_roll_belt &lt;dbl&gt;,
+## #   amplitude_pitch_belt &lt;int&gt;, amplitude_yaw_belt &lt;dbl&gt;,
+## #   var_total_accel_belt &lt;dbl&gt;, avg_roll_belt &lt;dbl&gt;,
+## #   stddev_roll_belt &lt;dbl&gt;, var_roll_belt &lt;dbl&gt;, avg_pitch_belt &lt;dbl&gt;,
+## #   stddev_pitch_belt &lt;dbl&gt;, var_pitch_belt &lt;dbl&gt;, avg_yaw_belt &lt;dbl&gt;,
+## #   stddev_yaw_belt &lt;dbl&gt;, var_yaw_belt &lt;dbl&gt;, gyros_belt_x &lt;dbl&gt;,
+## #   gyros_belt_y &lt;dbl&gt;, gyros_belt_z &lt;dbl&gt;, accel_belt_x &lt;int&gt;,
+## #   accel_belt_y &lt;int&gt;, accel_belt_z &lt;int&gt;, magnet_belt_x &lt;int&gt;,
+## #   magnet_belt_y &lt;int&gt;, magnet_belt_z &lt;int&gt;, roll_arm &lt;dbl&gt;,
+## #   pitch_arm &lt;dbl&gt;, yaw_arm &lt;dbl&gt;, total_accel_arm &lt;int&gt;,
+## #   var_accel_arm &lt;dbl&gt;, avg_roll_arm &lt;dbl&gt;, stddev_roll_arm &lt;dbl&gt;,
+## #   var_roll_arm &lt;dbl&gt;, avg_pitch_arm &lt;dbl&gt;, stddev_pitch_arm &lt;dbl&gt;,
+## #   var_pitch_arm &lt;dbl&gt;, avg_yaw_arm &lt;dbl&gt;, stddev_yaw_arm &lt;dbl&gt;,
+## #   var_yaw_arm &lt;dbl&gt;, gyros_arm_x &lt;dbl&gt;, gyros_arm_y &lt;dbl&gt;,
+## #   gyros_arm_z &lt;dbl&gt;, accel_arm_x &lt;int&gt;, accel_arm_y &lt;int&gt;,
+## #   accel_arm_z &lt;int&gt;, magnet_arm_x &lt;int&gt;, magnet_arm_y &lt;int&gt;,
+## #   magnet_arm_z &lt;int&gt;, kurtosis_roll_arm &lt;dbl&gt;, kurtosis_picth_arm &lt;dbl&gt;,
+## #   kurtosis_yaw_arm &lt;dbl&gt;, skewness_roll_arm &lt;dbl&gt;,
+## #   skewness_pitch_arm &lt;dbl&gt;, skewness_yaw_arm &lt;dbl&gt;, max_roll_arm &lt;dbl&gt;,
+## #   max_picth_arm &lt;dbl&gt;, max_yaw_arm &lt;int&gt;, min_roll_arm &lt;dbl&gt;,
+## #   min_pitch_arm &lt;dbl&gt;, min_yaw_arm &lt;int&gt;, amplitude_roll_arm &lt;dbl&gt;,
+## #   amplitude_pitch_arm &lt;dbl&gt;, amplitude_yaw_arm &lt;int&gt;,
+## #   roll_dumbbell &lt;dbl&gt;, pitch_dumbbell &lt;dbl&gt;, yaw_dumbbell &lt;dbl&gt;,
+## #   kurtosis_roll_dumbbell &lt;dbl&gt;, kurtosis_picth_dumbbell &lt;dbl&gt;,
+## #   kurtosis_yaw_dumbbell &lt;dbl&gt;, skewness_roll_dumbbell &lt;dbl&gt;,
+## #   skewness_pitch_dumbbell &lt;dbl&gt;, skewness_yaw_dumbbell &lt;dbl&gt;,
+## #   max_roll_dumbbell &lt;dbl&gt;, max_picth_dumbbell &lt;dbl&gt;,
+## #   max_yaw_dumbbell &lt;dbl&gt;, min_roll_dumbbell &lt;dbl&gt;,
+## #   min_pitch_dumbbell &lt;dbl&gt;, min_yaw_dumbbell &lt;dbl&gt;,
+## #   amplitude_roll_dumbbell &lt;dbl&gt;, amplitude_pitch_dumbbell &lt;dbl&gt;,
+## #   amplitude_yaw_dumbbell &lt;dbl&gt;, total_accel_dumbbell &lt;int&gt;,
+## #   var_accel_dumbbell &lt;dbl&gt;, avg_roll_dumbbell &lt;dbl&gt;, ...</code></pre>
+<p>Let’s look at the distribution of target variable.</p>
+<pre class="r"><code>table(training$classe)</code></pre>
+<pre><code>## 
+##    A    B    C    D    E 
+## 5580 3797 3422 3216 3607</code></pre>
+<pre class="r"><code>library(ggplot2)
+qplot(training$classe)</code></pre>
+<p><img src="data:image/png;base64,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3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKJNDQAuoP5P7g2gabDeOT2rUHdwDPQpE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpEQEUgmgbbjaNQJgIqAtE02G4chTIRUBGIpsF24yiUiYCKQDQNthtHoUwEVASiabDdOAplIqAiEE2D7cZRKBMBFYFoGmw3jkKZCKgIRNNgu3EUykRARSCaBtuNo1AmAioC0TTYbhyFMhFQEYimwXbjKJSJgIpANA22G0ehTARUBKJpsN04CmUioCIQTYPtxlEoEwEVgWgabDeOQpkIqAhE02C7cRTKREBFIJoG242jUCYCKgLRNNhuHIUyEVARiKbBduMolImAikA0DbYbR6FMBFQEommw3TgKZSKgIhBNg+3GUSgTARWBaBpsN45CmQioCETTYLtxFMpE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" width="672" /> Since there are so many variables it is impossible to visualize them all, so we will start with transformations in order to keep only the neccessary variables.</p>
 </div>
 
 

@@ -6,25 +6,69 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 ```
 
-## R Markdown
+### Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is an Markdown document created with purpose to present results of predictive analyses on people personal activity. It is  created as result of Practical Machine Learning Course Project.
+Data is provided by http://groupware.les.inf.puc-rio.br/har.
+Purpose of the modelling is to predict the manner in which people did the exercise which is in "class" variable in the trainig set.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+### Importing data
 
-```{r cars}
-summary(cars)
+For importing data we will use Hedley's readr package.
+
+```{r,cache=TRUE, cache=TRUE}
+library(readr)
+
+training <- read_csv("~/R/PracticalMachineLearning1/pml-training.csv", 
+col_types = cols(kurtosis_picth_arm = col_double(), 
+       kurtosis_picth_belt = col_double(), 
+       kurtosis_yaw_arm = col_double(), 
+       kurtosis_yaw_belt = col_double(), 
+       kurtosis_yaw_dumbbell = col_double(), 
+        kurtosis_yaw_forearm = col_double(), 
+        skewness_pitch_arm = col_double(), 
+        skewness_roll_belt.1 = col_double(), 
+        skewness_yaw_arm = col_double(), 
+        skewness_yaw_belt = col_double(),
+       skewness_yaw_dumbbell = col_double(),
+       skewness_yaw_forearm = col_double()))
+        
+        
+testing <- read.csv("pml-testing.csv")
 ```
 
-## Including Plots
+### Data inspection 
 
-You can also embed plots, for example:
+Let's examine training data set that we will use for modelling.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Training dataset contains 19 622 rows and 160 columns
+```{r}
+dim(training)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+str(training)
+```
+
+```{r}
+summary(training)
+```
+
+```{r}
+
+head(training,n = 20)
+```
+Let's look at the distribution of target variable.
+```{r}
+table(training$classe)
+```
+```{r}
+library(ggplot2)
+qplot(training$classe)
+```
+Since there are so many variables it is impossible to visualize them all,
+so we will start with transformations in order to keep only the neccessary variables.
+

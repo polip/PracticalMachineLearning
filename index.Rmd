@@ -19,7 +19,7 @@ Purpose of the modelling is to predict the manner in which people did the exerci
 
 For importing data we will use Hedley's readr package.
 
-```{r,cache=TRUE, cache=TRUE}
+```{r,cache=TRUE}
 library(readr)
 
 training <- read_csv("~/R/PracticalMachineLearning1/pml-training.csv", 
@@ -36,7 +36,7 @@ col_types = cols(kurtosis_picth_arm = col_double(),
        skewness_yaw_dumbbell = col_double(),
        skewness_yaw_forearm = col_double()))
         
-        
+
 testing <- read.csv("pml-testing.csv")
 ```
 
@@ -65,10 +65,56 @@ Let's look at the distribution of target variable.
 ```{r}
 table(training$classe)
 ```
+
+
+First, we will remove also first 6 columns, since they don't contain usefull data.
+
+```{r}
+training <- training[, -(1:6)]
+testing <- testing[, -(1:6)]
+```
+
+Then, we will remove columns with all missing variables.
+
+```{r}
+allmisscols <- apply(training,2, function(x)all(is.na(x)))
+colswithallmiss <-names(allmisscols[allmisscols>0])
+
+training <- training[, -which(names(training)%in%colswithallmiss)]
+testing <- testing[, -which(names(testing)%in%colswithallmiss)]
+```
+
+We will also remove variables with NAs share above 90%.
+```{r}
+training <- training[,colMeans(is.na(training))<0.10]
+testing <- testing[,colMeans(is.na(testing))<0.10]
+
+```
+
+Imputting mean for missing values.
+```{r}
+
+```
+
+Since there are so many variables it is impossible to visualize them all,
+so we will start with transformations in order to find highly corellated variables.
+
+```{r}
+library(corrplot)
+library(caret)
+
+trainingScale <- preProcess(training[,-148],method = c("center","scale"))
+trainingTransformed <- predict(trainingScale,training)
+trainingCor <- cor(trainingTransformed[,-148],use = "complete.obs")
+
+highlyCor <- findCorrelation(trainingCor,cutoff = 0.8)
+
+trainingScaled <- 
+```
+Target variable distribution.
 ```{r}
 library(ggplot2)
 qplot(training$classe)
 ```
-Since there are so many variables it is impossible to visualize them all,
-so we will start with transformations in order to keep only the neccessary variables.
+
 

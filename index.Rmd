@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 
 This is an Markdown document created with purpose to present results of predictive analyses on people personal activity. It is  created as result of Practical Machine Learning Course Project.
 Data is provided by http://groupware.les.inf.puc-rio.br/har.
-Purpose of the modelling is to predict the manner in which people did the exercise which is in "class" variable in the trainig set.
+Purpose of the modelling is to predict the manner in which people did the exercise which is part of the "classe" variable in the training set.
 
 ### Importing data
 
@@ -91,30 +91,83 @@ testing <- testing[,colMeans(is.na(testing))<0.10]
 
 ```
 
-Imputting mean for missing values.
+For the variables with lower than 90% of NAs we will impute mean value.
+
 ```{r}
 
+training[] <- lapply(training,function(x) ifelse(is.na(x), mean(x,na.rm = T),x))
 ```
 
-Since there are so many variables it is impossible to visualize them all,
-so we will start with transformations in order to find highly corellated variables.
+Now that we have clean data with missing values, We will start with examine of corellation between variables.
 
 ```{r}
 library(corrplot)
+
+trainingCor <- cor(training[,-54])
+corrplot(trainingCor,order = "hclust")
+
+```
+
+Finally, we will remove variables correlated more than 80%.
+```{r, message=FALSE, warning=FALSE}
 library(caret)
+highlyCorr <- findCorrelation(trainingCor,cutoff = 0.80)
 
-trainingScale <- preProcess(training[,-148],method = c("center","scale"))
-trainingTransformed <- predict(trainingScale,training)
-trainingCor <- cor(trainingTransformed[,-148],use = "complete.obs")
-
-highlyCor <- findCorrelation(trainingCor,cutoff = 0.8)
-
-trainingScaled <- 
+training <- training[,-c(highlyCorr)]
+testing <- testing[,-highlyCorr]
 ```
-Target variable distribution.
+
+After cleaning data and removing highly corellated variables we have dataset of 40 predictors on which we will train gbm algorithm.
+
 ```{r}
-library(ggplot2)
-qplot(training$classe)
+dim(training)
 ```
+
+
+Now, we will fit gbm model from caret package in order to build a model for prediction of classe variable. First, we will transform target variable to factor, then divide dataset to train (75%) and validation (25%). Next, we will transform predictors using scale, center and Yeo Yohnson transformations.
+```{r}
+training$classe <- factor(training$classe)
+trainID <- createDataPartition(training$classe,p = 0.75, list=FALSE)
+
+train <- training[trainID,]
+validation <- training[-trainID,]
+
+#remove original training dataset
+rm(training)
+
+trainPreProcess <- preProcess(x = train[,-41], method = c("center","scale"))
+
+trainTransform <- predict(trainPreProcess,train)
+
+#remove original training
+rm(train)
+
+
+```
+Fit the gbm model.
+```{r, cache=TRUE,echo=TRUE, message=FALSE, warning=FALSE}
+
+gbm <- train(classe~., data=trainTransform, method="gbm",verbose = FALSE)
+```
+
+
+We will also transform validation set and make prediction.
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+validTransform <- predict(trainPreProcess,validation)
+valPred <- predict(gbm,validTransform)
+confusionMatrix(valPred,validTransform$classe)
+```
+
+
+Finally, we will transform test dataset and make prediction for the final submission.
+
+```{r, echo=TRUE}
+testTransform <- predict(trainPreProcess,testing)
+testPred <- predict(gbm,testTransform)
+
+```
+
+
 
 

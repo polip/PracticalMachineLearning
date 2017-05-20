@@ -19,7 +19,7 @@ Purpose of the modelling is to predict the manner in which people did the exerci
 
 For importing data we will use Hedley's readr package.
 
-```{r,cache=TRUE}
+```{r}
 library(readr)
 
 training <- read_csv("~/R/PracticalMachineLearning1/pml-training.csv", 
@@ -49,13 +49,6 @@ Training dataset contains 19 622 rows and 160 columns
 dim(training)
 ```
 
-```{r}
-str(training)
-```
-
-```{r}
-summary(training)
-```
 
 ```{r}
 
@@ -98,7 +91,7 @@ For the variables with lower than 90% of NAs we will impute mean value.
 training[] <- lapply(training,function(x) ifelse(is.na(x), mean(x,na.rm = T),x))
 ```
 
-Now that we have clean data with missing values, We will start with examine of corellation between variables.
+Now that we have clean data with missing values, we will examine corellation range between variables.
 
 ```{r}
 library(corrplot)
@@ -117,16 +110,17 @@ training <- training[,-c(highlyCorr)]
 testing <- testing[,-highlyCorr]
 ```
 
-After cleaning data and removing highly corellated variables we have dataset of 40 predictors on which we will train gbm algorithm.
+After cleaning data and removing highly corellated variables we have dataset of 40 predictors left on which we will train gbm algorithm.
 
 ```{r}
 dim(training)
 ```
 
 
-Now, we will fit gbm model from caret package in order to build a model for prediction of classe variable. First, we will transform target variable to factor, then divide dataset to train (75%) and validation (25%). Next, we will transform predictors using scale, center and Yeo Yohnson transformations.
+Now, we will fit gbm model from caret package in order to build a model for prediction of classe variable. First, we will transform target variable to factor, then divide dataset to train (75%) and validation (25%). Next, we will transform predictors using scale and center  mehods
 ```{r}
 training$classe <- factor(training$classe)
+set.seed(1)
 trainID <- createDataPartition(training$classe,p = 0.75, list=FALSE)
 
 train <- training[trainID,]
@@ -144,20 +138,29 @@ rm(train)
 
 
 ```
-Fit the gbm model.
-```{r, cache=TRUE,echo=TRUE, message=FALSE, warning=FALSE}
+We will use crossvalidation resampling with 5 folds in order to decrease computation time. 
 
-gbm <- train(classe~., data=trainTransform, method="gbm",verbose = FALSE)
+Fit the gbm model.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+
+trainCntr <- trainControl(method = "cv",number = 5)
+gbm <- train(classe~.,data = trainTransform, method="gbm",verbose = FALSE,trControl = trainCntr)
 ```
 
 
-We will also transform validation set and make prediction.
+Now, we will transform validation set and make prediction in order to calculate accuracy and out of sample error.
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 validTransform <- predict(trainPreProcess,validation)
 valPred <- predict(gbm,validTransform)
+
+accuracy <- sum(valPred==validTransform$classe) / length(valPred)
+outError <- 1 - accuracy
 confusionMatrix(valPred,validTransform$classe)
 ```
+
+
+Accuracy on the validation data is `r round(accuracy,2)`, which means that out of sample error is `r round(outError,2) `
 
 
 Finally, we will transform test dataset and make prediction for the final submission.
@@ -165,7 +168,7 @@ Finally, we will transform test dataset and make prediction for the final submis
 ```{r, echo=TRUE}
 testTransform <- predict(trainPreProcess,testing)
 testPred <- predict(gbm,testTransform)
-
+testPred
 ```
 
 

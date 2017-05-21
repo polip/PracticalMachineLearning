@@ -59,6 +59,7 @@ Let's look at the distribution of target variable.
 table(training$classe)
 ```
 
+###Data cleaning
 
 First, we will remove also first 6 columns, since they don't contain usefull data.
 
@@ -115,7 +116,7 @@ After cleaning data and removing highly corellated variables we have dataset of 
 ```{r}
 dim(training)
 ```
-
+###Modelling
 
 Now, we will fit gbm model from caret package in order to build a model for prediction of classe variable. First, we will transform target variable to factor, then divide dataset to train (75%) and validation (25%). Next, we will transform predictors using scale and center  mehods
 ```{r}
